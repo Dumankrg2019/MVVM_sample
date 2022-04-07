@@ -33,13 +33,20 @@ class MainActivity : AppCompatActivity() {
             adapter = countriesAdapter
         }
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = false
+            viewModel.refresh()
+        }
         observeViewModel()
     }
 
     fun observeViewModel() {
         viewModel.countries.observe(this, Observer { countries ->
 
-            countries?.let{ countriesAdapter.updateCountries(it)}
+            countries?.let{
+                binding.countriesList.visibility = View.VISIBLE
+                countriesAdapter.updateCountries(it)
+            }
         })
 
         viewModel.countryLoadedError.observe(this, Observer { isError ->
